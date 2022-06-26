@@ -1,0 +1,51 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Script file="Battery.lua" />
+
+	<Button name="NRGPowerButton" inherits="SecureActionButtonTemplate" parent="UIParent" toplevel="true" hidden="false" frameStrata="LOW" movable="true">
+		<Size>
+			<AbsDimension x="64" y="32" />
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER">
+				<Offset>
+					<AbsDimension x="0" y="100" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Scripts>
+			<OnLoad>
+				self:EnableMouse(true);
+				self:EnableKeyboard(false);
+				self:RegisterForDrag("LeftButton", "RightButton");
+				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+			</OnLoad>
+			<OnDragStart>
+				if (button == "LeftButton" and IsShiftKeyDown()) then
+				self:StartMoving();
+				end
+			</OnDragStart>
+			<OnDragStop>
+				self:StopMovingOrSizing();
+				NRG_RepositionateButton(self);
+			</OnDragStop>
+			<OnClick>
+				--CHA_AnnouncementButtonOnClick(self);
+			</OnClick>
+		</Scripts>
+	</Button>
+
+	<!-- Dummy event frame -->
+	<Frame name="NRGEventFrame">
+		<Scripts>
+			<OnLoad>
+				NRG_OnLoad();
+			</OnLoad>
+			<OnEvent>
+				NRG_OnEvent(self, event, ...);
+			</OnEvent>
+			<OnUpdate>
+				NRG_OnTimer(elapsed);
+			</OnUpdate>
+		</Scripts>
+	</Frame>
+</Ui>

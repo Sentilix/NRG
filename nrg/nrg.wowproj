@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Deploy" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Default</Configuration>
+    <Name>nrg</Name>
+    <ProjectGuid>{767eee90-d005-4791-96be-3ecea0ad0b81}</ProjectGuid>
+    <AssemblyName>nrg</AssemblyName>
+    <RootNamespace>nrg</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Default' ">
+    <OutputPath>.</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Bmp\power0.bmp" />
+    <Content Include="Bmp\power0.png" />
+    <Content Include="Bmp\power1.bmp" />
+    <Content Include="Bmp\power1.png" />
+    <Content Include="Bmp\power2.bmp" />
+    <Content Include="Bmp\power2.png" />
+    <Content Include="Bmp\power3.bmp" />
+    <Content Include="Bmp\power3.png" />
+    <Content Include="Bmp\power4.bmp" />
+    <Content Include="Bmp\power4.png" />
+    <Content Include="Bmp\power5.bmp" />
+    <Content Include="Bmp\power5.png" />
+    <Content Include="nrg-TBC.toc">
+      <SubType>TableOfContents</SubType>
+    </Content>
+    <Content Include="nrg-Classic.toc">
+      <SubType>TableOfContents</SubType>
+    </Content>
+    <Content Include="DigamAddonLib.lua">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Icons\power0.tga" />
+    <Content Include="Icons\power1.tga" />
+    <Content Include="Icons\power2.tga" />
+    <Content Include="Icons\power3.tga" />
+    <Content Include="Icons\power4.tga" />
+    <Content Include="Icons\power5.tga" />
+    <Content Include="nrg.toc">
+      <SubType>TableOfContents</SubType>
+    </Content>
+    <Content Include="Battery.xml">
+      <SubType>Frame</SubType>
+    </Content>
+    <Content Include="Battery.lua">
+      <SubType>Code</SubType>
+      <DependentUpon>Battery.xml</DependentUpon>
+    </Content>
+    <Content Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Bmp\" />
+    <Folder Include="Icons\" />
+  </ItemGroup>
+  <Import Project="$(DevEnvDir)\Extensions\Tools\MSBuild\AddonStudio\Wow\3.0\WowAddonStudio.targets" />
+  <!--
+  To modify your build process, add your task inside one of the targets below and uncomment it.
+  <Target Name="BeforeClean"></Target>
+  <Target Name="AfterClean"></Target>
+  <Target Name="BeforeRebuild"></Target>
+  <Target Name="AfterRebuild"></Target>
+  <Target Name="BeforeDeploy"></Target>
+  <Target Name="AfterDeploy"></Target>
+  -->
+</Project>

@@ -1,0 +1,13 @@
+## Title: NRG - 5 second rule
+## Notes: Addon to check mp5 rule
+## Version: 0.99.0
+## Author: Mimma @ <EU-Pyrewood Village>
+## Interface: 11403
+## SavedVariables: NRG_Options
+## X-Expansion-Level: 1
+## X-Curse-Project-ID: 637056
+## X-WoWI-ID: ?
+## X-Wago-ID: ?
+
+DigamAddonLib.lua
+Battery.xml
