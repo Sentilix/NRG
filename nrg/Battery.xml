@@ -12,6 +12,24 @@
 				</Offset>
 			</Anchor>
 		</Anchors>
+		<Layers>
+			<Layer>
+				<FontString name="$parentValue" justifyH="CENTER" font="Fonts\FRIZQT__.TTF" inherits="GameFontNormal" text="999">
+					<Size>
+						<AbsDimension x="64" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="CENTER">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<Color r="1.0" g="1.0" b="1.0" a="0.0" />
+					<FontHeight val="32" />
+				</FontString>
+			</Layer>
+		</Layers>
 		<Scripts>
 			<OnLoad>
 				self:EnableMouse(true);

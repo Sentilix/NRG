@@ -1,6 +1,6 @@
-## Title: NRG - 5 second rule
-## Notes: Addon to check mp5 rule
-## Version: 1.0.0
+## Title: NRG - mp5 Power Button
+## Notes: Addon to check mp5 rule (yeah, I know .. irrelevant for retail, but anyway)
+## Version: 1.1.0
 ## Author: Mimma @ <EU-Pyrewood Village>
 ## Interface: 90205
 ## SavedVariables: NRG_Options

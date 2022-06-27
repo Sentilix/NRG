@@ -11,9 +11,13 @@ Please see the ReadMe.txt for addon details.
 ]]
 
 
+--	Persisted options, needs to be global.
+NRG_Options = { };
+
+
 local addonMetadata = {
 	["ADDONNAME"]		= "NRG",
-	["SHORTNAME"]		= "NRG",
+	["SHORTNAME"]		= "nrg",
 	["PREFIX"]			= "NRGv1",
 	["NORMALCHATCOLOR"]	= "2060FF",
 	["HOTCHATCOLOR"]	= "F0F0F0",
@@ -79,19 +83,22 @@ local NRG_ENABLED_FOR_CLASSES = {
 
 local CONFIG_KEY_PowerButtonPosX = "PowerButton.X";
 local CONFIG_KEY_PowerButtonPosY = "PowerButton.Y";
+local CONFIG_KEY_PowerButtonSize = "PowerButton.Size";
 local CONFIG_KEY_PowerButtonVisible = "PowerButton.Visible";
 
 
+local CONFIG_DEFAULT_PowerButtonSize = 3;
 local CONFIG_DEFAULT_PowerButtonVisible = true;
 
-A.options = { };
 A.currentVersion = 0;
 A.currentPowerLevel = 0;
+A.enabledForPlayer = false;
 
 --	Timer settings:
 A.timerTick = 0;
 A.nextPowerStep = 0;
 A.powerFrequency = 1.00;
+A.disableUpdates = true;
 
 
 --
@@ -113,6 +120,8 @@ SlashCmdList["NRG_NRG"] = function(msg)
 		SlashCmdList["NRG_SHOW"]();
 	elseif option == "HIDE" then
 		SlashCmdList["NRG_HIDE"]();
+	elseif option == "SIZE" then
+		SlashCmdList["NRG_SIZE"](msg);
 	elseif option == "VERSION" then
 		SlashCmdList["NRG_VERSION"]();
 	else
@@ -140,6 +149,19 @@ SlashCmdList["NRG_HIDE"] = function(msg)
 	A:SetOption(CONFIG_KEY_PowerButtonVisible, A.configPowerButtonVisible);
 end
 
+--	Set the size of the power button
+--	Syntax: /nrgsize <size 1-15>
+--	Alternative: /nrg size <size 1-15>
+SLASH_NRG_SIZE1 = "/nrgsize"	
+SlashCmdList["NRG_SIZE"] = function(msg)
+	local _, _, sizeStr = string.find(msg, "size (%d*)");
+	local size = tonumber(sizeStr);
+	if size and size >= 1 and size <= 15 then
+		A:UpdatePowerButtonSize(size + 1);
+		A:SetOption(CONFIG_KEY_PowerButtonSize, size);
+	end;
+end
+
 --	Request client version information
 --	Syntax: /nrgversion
 --	Alternative: /nrg version
@@ -153,17 +175,26 @@ SlashCmdList["NRG_VERSION"] = function(msg)
 end
 
 
-function A:MainInitialization()
+function A:PreInitialization()
 	self.currentPowerLevel = 0;
+	self.disableUpdates = true;
+	NRGPowerButton:Hide();
+end;
+
+function A:PostInitialization()
 	self:InitializeConfigSettings();
 	self:RepositionateButton(NRGPowerButton);
 
-	if NRG_ENABLED_FOR_CLASSES[self.localPlayerClass] and A.configPowerButtonVisible then
+	self.enabledForPlayer = NRG_ENABLED_FOR_CLASSES[self.localPlayerClass];
+	if self.enabledForPlayer and self.configPowerButtonVisible then
 		NRGPowerButton:Show();
 	else
 		NRGPowerButton:Hide();
 	end;
+
+	self.disableUpdates = false;
 end;
+
 
 function A:RepositionateButton(sender)
 	local x, y = sender:GetLeft(), sender:GetTop() - UIParent:GetHeight();
@@ -177,6 +208,12 @@ end;
 function A:UpdatePower()
 	NRGPowerButton:SetNormalTexture(NRG_POWERLEVELS[self.currentPowerLevel]["icon"]);
 	NRGPowerButton:SetPushedTexture(NRG_POWERLEVELS[self.currentPowerLevel]["icon"]);
+end;
+
+function A:UpdatePowerButtonSize(size)
+	NRGPowerButton:SetWidth(size * 16);
+	NRGPowerButton:SetHeight(size * 8);
+	NRGPowerButtonValue:SetFont("Fonts\\FRIZQT__.TTF", 10 + size * 3);
 end;
 
 function A:ResetPower()
@@ -196,14 +233,18 @@ end;
 --	Configuration functions
 --
 function A:GetOption(parameter, defaultValue)
-	if self.options[self.localPlayerRealm] then
-		if self.options[self.localPlayerRealm][self.localPlayerName] then
-			if self.options[self.localPlayerRealm][self.localPlayerName][parameter] then
-				local value = self.options[self.localPlayerRealm][self.localPlayerName][parameter];
+	local realmname = self.localPlayerRealm;
+	local playername = UnitName("player");
+
+	-- Character level
+	if NRG_Options[realmname] then
+		if NRG_Options[realmname][playername] then
+			if NRG_Options[realmname][playername][parameter] then
+				local value = NRG_Options[realmname][playername][parameter];
 				if (type(value) == "table") or not(value == "") then
 					return value;
 				end
-			end		
+			end
 		end
 	end
 	
@@ -211,20 +252,24 @@ function A:GetOption(parameter, defaultValue)
 end
 
 function A:SetOption(parameter, value)
-	if not self.options[self.localPlayerRealm] then
-		self.options[self.localPlayerRealm] = { };
+	local realmname = self.localPlayerRealm;
+	local playername = UnitName("player");
+
+	-- Character level:
+	if not NRG_Options[realmname] then
+		NRG_Options[realmname] = { };
 	end
 		
-	if not self.options[self.localPlayerRealm][self.localPlayerName] then
-		self.options[self.localPlayerRealm][self.localPlayerName] = { };
+	if not NRG_Options[realmname][playername] then
+		NRG_Options[realmname][playername] = { };
 	end
 		
-	self.options[self.localPlayerRealm][self.localPlayerName][parameter] = value;
+	NRG_Options[realmname][playername][parameter] = value;
 end
 
 function A:InitializeConfigSettings()
-	if not self.options then
-		self.options = { };
+	if not NRG_Options then
+		NRG_Options = { };
 	end
 
 	local x,y = NRGPowerButton:GetPoint();
@@ -233,11 +278,19 @@ function A:InitializeConfigSettings()
 
 	local value = self:GetOption(CONFIG_KEY_PowerButtonVisible, CONFIG_DEFAULT_PowerButtonVisible);
 	if type(value) == "boolean" then
-		A.configPowerButtonVisible = value;
+		self.configPowerButtonVisible = value;
 	else
-		A.configPowerButtonVisible = CONFIG_DEFAULT_PowerButtonVisible;
+		self.configPowerButtonVisible = CONFIG_DEFAULT_PowerButtonVisible;
 	end;
-	self:SetOption(CONFIG_KEY_PowerButtonVisible, A.configPowerButtonVisible);
+	self:SetOption(CONFIG_KEY_PowerButtonVisible, self.configPowerButtonVisible);
+
+	local value = self:GetOption(CONFIG_KEY_PowerButtonSize, CONFIG_DEFAULT_PowerButtonSize);
+	local powerButtonSize = tonumber(value);
+	if not powerButtonSize or powerButtonSize < 1 or powerButtonSize > 15 then
+		powerButtonSize = CONFIG_DEFAULT_PowerButtonSize;
+	end;
+	self:UpdatePowerButtonSize(powerButtonSize + 1);
+	self:SetOption(CONFIG_KEY_PowerButtonSize, powerButtonSize);
 end;
 
 function A:HandleTXVersion(message, sender)
@@ -248,9 +301,12 @@ function A:HandleRXVersion(message, sender)
 	self:echo(string.format("[%s] is using NRG version %s", sender, message))
 end;
 
-
 function A:OnTimer(elapsed)
 	self.timerTick = self.timerTick + elapsed
+
+	if A.enabledForPlayer then
+		A:CheckManaUpdates();
+	end;
 
 	if self.timerTick > (self.nextPowerStep + self.powerFrequency) then
 		self:AdvancePower();
@@ -258,14 +314,69 @@ function A:OnTimer(elapsed)
 	end;
 end;
 
-function A:OnEvent(object, event, ...)
-	if event == "UNIT_SPELLCAST_SUCCEEDED" then
-		self:ResetPower();
+function A:IsEligibleForReset(unitid, spellID)
+	if unitid ~= "player" then return false; end;
 
-	--elseif event == "UNIT_SPELLCAST_SENT" then
-	--elseif event == "UNIT_SPELLCAST_START" then
-	--elseif event == "UNIT_SPELLCAST_STOP" then
-	--elseif event == "UNIT_SPELLCAST_FAILED" then
+	return true;
+end;
+
+A.lastManaValue = -1;
+A.lastManaAlphaValue = 0.00;
+A.manaAlphaValueDecay = 0.5 / GetFramerate();
+function A:CheckManaUpdates()
+	if disableUpdates then 
+		return; 
+	end;
+
+	local mana = UnitPower("player", 0);
+
+	if mana > self.lastManaValue and self.lastManaValue >= 0 then
+		NRGPowerButtonValue:SetText(mana - self.lastManaValue);
+		self.lastManaAlphaValue = 1.00;
+		NRGPowerButtonValue:SetAlpha(self.lastManaAlphaValue);
+	else
+		if self.lastManaAlphaValue > 0 then
+			self.lastManaAlphaValue = self.lastManaAlphaValue - self.manaAlphaValueDecay;
+			if self.lastManaAlphaValue < 0 then 
+				self.lastManaAlphaValue = 0; 
+			end;
+			NRGPowerButtonValue:SetAlpha(self.lastManaAlphaValue);
+		end;
+	end;
+
+	self.lastManaValue = mana;
+end;
+
+
+local NRG_ValidSubEvents = {
+	["SPELL_AURA_APPLIED"] = true,
+	["SPELL_HEAL"] = true,
+	["SPELL_DAMAGE"] = true,
+}
+
+function A:OnEvent(object, event, ...)
+
+	if event == "ADDON_LOADED" then
+		local addonname = ...;
+		if addonname == self.addonShortName then
+			self:PostInitialization();
+		end
+
+	elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
+		local _, subevent, _, sourceGUID, sourceName = CombatLogGetCurrentEventInfo();
+
+		--	Only spells I did please
+		if sourceGUID == self.localPlayerGUID then
+			--	Filter out unwanted heal/damage sub events.
+			--	TODO: Do we need Dispell actions too?
+			if NRG_ValidSubEvents[subevent] then
+				--	Only react on magic stuff:
+				local spellId, _, spellSchool = select(12, CombatLogGetCurrentEventInfo());
+				if spellSchool and bit.band(spellSchool, 0x07e) > 0 then
+					self:ResetPower();
+				end;
+			end;
+		end;
 
 	elseif event == "CHAT_MSG_ADDON" then
 		local prefix, msg, channel, sender = ...;
@@ -273,7 +384,6 @@ function A:OnEvent(object, event, ...)
 		if prefix ~= self.addonPrefix then	
 			return;
 		end;
-
 
 		--	Note: sender+recipient contains both name+realm of who sended message.
 		local _, _, cmd, message, recipient = string.find(msg, "([^#]*)#([^#]*)#([^#]*)");	
@@ -295,16 +405,15 @@ function A:OnLoad()
 	self.currentVersion = self:calculateVersion(A.addonVersion);
 	self:echo(string.format("Type %s/nrg%s to configure the addon, or right-click the NRG power button.", self.chatColorHot, self.chatColorNormal));
 
+	CombatTextSetActiveUnit("player");
+
+    NRGEventFrame:RegisterEvent("ADDON_LOADED");
     NRGEventFrame:RegisterEvent("CHAT_MSG_ADDON");
-    --NRGEventFrame:RegisterEvent("UNIT_SPELLCAST_SENT");
-    --NRGEventFrame:RegisterEvent("UNIT_SPELLCAST_START");
-    --NRGEventFrame:RegisterEvent("UNIT_SPELLCAST_STOP");
-    --NRGEventFrame:RegisterEvent("UNIT_SPELLCAST_FAILED");
-    NRGEventFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
+    NRGEventFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 
 	C_ChatInfo.RegisterAddonMessagePrefix(self.addonPrefix);
 
-	self:MainInitialization();
+	self:PreInitialization();
 end
 
 
@@ -316,8 +425,8 @@ function NRG_OnTimer(elapsed)
 	A:OnTimer(elapsed);
 end;
 
-function NRG_OnEvent(self, event, ...)
-	A:OnEvent(self, event, ...);
+function NRG_OnEvent(object, event, ...)
+	A:OnEvent(object, event, ...);
 end;
 
 function NRG_RepositionateButton(sender)

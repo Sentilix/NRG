@@ -69,6 +69,7 @@ function DigamAddonLib:new(addonSettings)
 		localPlayerName = self:getPlayerAndRealm("player", true),
 		localPlayerClass = self:getUnitClass("player"),
 		localPlayerRealm = self:getPlayerRealm("player"),
+		localPlayerGUID = UnitGUID("player"),
 
 		chatColorNormal = DIGAM_COLOR_BEGIN .. (addonSettings["NORMALCHATCOLOR"] or DIGAM_DEFAULT_ColorNormal),
 		chatColorHot = DIGAM_COLOR_BEGIN..(addonSettings["HOTCHATCOLOR"] or DIGAM_DEFAULT_ColorHot),
