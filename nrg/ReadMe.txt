@@ -8,6 +8,10 @@ No config, no switches, no nothing. Well almost: you can move the power button b
 
 Version history:
 ----------------
+NRG version 1.2.0
+* Lowered the update rate by 1/4; saving CPU ressources
+
+
 NRG version 1.1.0
 * Filtering events, so only magic events are now considered.
   Still not perfect but far better than before: dismounting does no longer trigger mp5 cooldown for example!

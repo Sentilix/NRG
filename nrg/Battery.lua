@@ -301,16 +301,28 @@ function A:HandleRXVersion(message, sender)
 	self:echo(string.format("[%s] is using NRG version %s", sender, message))
 end;
 
+A.frameSkipDefault			= 4;	-- Skip every Nth frame
+A.frameSkipCounter			= 0;	-- (Internal) frame counter
+A.lastManaValue				= -1;	-- (Internal) last mana value
+A.lastManaAlphaValue		= 0.00;	-- (Internal) last alpha value
+A.manaAlphaValueDecay		= 0.05;
+
 function A:OnTimer(elapsed)
 	self.timerTick = self.timerTick + elapsed
 
 	if A.enabledForPlayer then
-		A:CheckManaUpdates();
+		self.frameSkipCounter = self.frameSkipCounter - 1;
+		if self.frameSkipCounter < 0 then
+			self.frameSkipCounter = self.frameSkipDefault;
+			self:CheckManaUpdates();
+		end;
 	end;
 
 	if self.timerTick > (self.nextPowerStep + self.powerFrequency) then
 		self:AdvancePower();
 		self.nextPowerStep = self.timerTick;
+
+		A.manaAlphaValueDecay = 1 / (GetFramerate() * 2 / A.frameSkipDefault);
 	end;
 end;
 
@@ -320,9 +332,6 @@ function A:IsEligibleForReset(unitid, spellID)
 	return true;
 end;
 
-A.lastManaValue = -1;
-A.lastManaAlphaValue = 0.00;
-A.manaAlphaValueDecay = 0.5 / GetFramerate();
 function A:CheckManaUpdates()
 	if disableUpdates then 
 		return; 
@@ -371,7 +380,7 @@ function A:OnEvent(object, event, ...)
 			--	TODO: Do we need Dispell actions too?
 			if NRG_ValidSubEvents[subevent] then
 				--	Only react on magic stuff:
-				local spellId, _, spellSchool = select(12, CombatLogGetCurrentEventInfo());
+				local spellId, spellName, spellSchool = select(12, CombatLogGetCurrentEventInfo());
 				if spellSchool and bit.band(spellSchool, 0x07e) > 0 then
 					self:ResetPower();
 				end;

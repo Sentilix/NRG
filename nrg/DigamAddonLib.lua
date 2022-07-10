@@ -11,7 +11,7 @@
 
 
 local DIGAM_IsDebugBuild					= false;
-local DIGAM_BuildVersion					= 5;
+local DIGAM_BuildVersion					= 6;
 
 local DIGAM_COLOR_BEGIN						= "|c80";
 local DIGAM_CHAT_END						= "|r";
@@ -66,7 +66,7 @@ function DigamAddonLib:new(addonSettings)
 		addonAuthor = GetAddOnMetadata(_addonName, "Author") or "",
 		addonExpansionLevel = tonumber(GetAddOnMetadata(_addonName, "X-Expansion-Level")),
 
-		localPlayerName = self:getPlayerAndRealm("player", true),
+		localPlayerName = self:getPlayerAndRealm("player"),
 		localPlayerClass = self:getUnitClass("player"),
 		localPlayerRealm = self:getPlayerRealm("player"),
 		localPlayerGUID = UnitGUID("player"),
@@ -290,7 +290,7 @@ function DigamAddonLib:stripRealmName(nameAndRealm)
 end;
 
 function DigamAddonLib:getFullPlayerName(playerName)
-	local _, _, name, realm = string.find(playerName, "([^-]*)-(%S*)");
+	local _, _, name, realm = string.find(playerName, "([^-]*)-([%S ]*)");
 	
 	if realm then
 		if string.find(realm, " ") then
@@ -305,7 +305,7 @@ function DigamAddonLib:getFullPlayerName(playerName)
 	return name .."-".. realm;
 end;
 
-function DigamAddonLib:getPlayerAndRealm(unitid, stripSpaces)
+function DigamAddonLib:getPlayerAndRealm(unitid, keepRealmnameSpaces)
 	local playername, realmname = UnitName(unitid);
 	if not playername then return nil; end;
 
@@ -313,7 +313,7 @@ function DigamAddonLib:getPlayerAndRealm(unitid, stripSpaces)
 		realmname = GetRealmName();
 	end;
 
-	if stripSpaces and string.find(realmname, " ") then
+	if not keepRealmnameSpaces and string.find(realmname, " ") then
 		local _, _, name1, name2 = string.find(realmname, "([a-zA-Z]*) ([a-zA-Z]*)");
 		realmname = name1 .. name2; 
 	end;
@@ -364,7 +364,7 @@ function DigamAddonLib:unitClass(unitid)
 	return classname;
 end;
 
-function DigamAddonLib:getUnitidFromName(playerName)
+function DigamAddonLib:getUnitidFromName(playerName, keepRealmnameSpaces)
 	local unitid, unitname;
 	if IsInRaid() then
 		for n = 1, 40, 1 do
@@ -372,7 +372,7 @@ function DigamAddonLib:getUnitidFromName(playerName)
 			unitname = UnitName(unitid);
 			if not unitname then return nil; end;
 
-			unitname = self:getPlayerAndRealm(unitid);
+			unitname = self:getPlayerAndRealm(unitid, keepRealmnameSpaces);
 			if playerName == unitname then
 				return unitid;
 			end;
@@ -385,7 +385,7 @@ function DigamAddonLib:getUnitidFromName(playerName)
 				unitid = "player"; 
 			end;
 		
-			unitname = self:getPlayerAndRealm(unitid);
+			unitname = self:getPlayerAndRealm(unitid, keepRealmnameSpaces);
 			if playerName == unitname then
 				return unitid;
 			end;
