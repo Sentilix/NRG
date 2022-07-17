@@ -8,6 +8,10 @@ No config, no switches, no nothing. Well almost: you can move the power button b
 
 Version history:
 ----------------
+NRG version 1.2.1
+* Updated spell detection; aura refreshment caused by zoning no longer triggers an event.
+
+
 NRG version 1.2.0
 * Lowered the update rate by 1/4; saving CPU ressources
 

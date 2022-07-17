@@ -358,9 +358,7 @@ end;
 
 
 local NRG_ValidSubEvents = {
-	["SPELL_AURA_APPLIED"] = true,
-	["SPELL_HEAL"] = true,
-	["SPELL_DAMAGE"] = true,
+	["SPELL_CAST_SUCCESS"] = true,
 }
 
 function A:OnEvent(object, event, ...)
@@ -376,12 +374,16 @@ function A:OnEvent(object, event, ...)
 
 		--	Only spells I did please
 		if sourceGUID == self.localPlayerGUID then
+--			self:echo(string.format("Subevent, event:%s", subevent or "nil"));
+		
 			--	Filter out unwanted heal/damage sub events.
-			--	TODO: Do we need Dispell actions too?
 			if NRG_ValidSubEvents[subevent] then
-				--	Only react on magic stuff:
+				--	Only react on magic stuff. SpellID is always 0 in classic :(
 				local spellId, spellName, spellSchool = select(12, CombatLogGetCurrentEventInfo());
-				if spellSchool and bit.band(spellSchool, 0x07e) > 0 then
+				
+				if spellSchool and bit.band(spellSchool, 0x07e) > 0 then				
+--					self:echo(string.format("Resetting, spell:%s, school:%s", spellName or "nil", spellSchool or "nil"));
+					
 					self:ResetPower();
 				end;
 			end;
