@@ -115,7 +115,8 @@ SlashCmdList["NRG_NRG"] = function(msg)
 	option = string.upper(option);
 		
 	if (option == "CFG" or option == "CONFIG") then
-		SlashCmdList["NRG_CONFIG"]();
+		-- Skip; no CONFIG options in addon (yet?)
+		--SlashCmdList["NRG_CONFIG"]();
 	elseif option == "SHOW" then
 		SlashCmdList["NRG_SHOW"]();
 	elseif option == "HIDE" then

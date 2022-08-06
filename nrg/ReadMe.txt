@@ -8,6 +8,10 @@ No config, no switches, no nothing. Well almost: you can move the power button b
 
 Version history:
 ----------------
+NRG version 1.2.2
+* Fixed LUA error, caused by a reference to the NRG configuration, which does not exist.
+
+
 NRG version 1.2.1
 * Updated spell detection; aura refreshment caused by zoning no longer triggers an event.
 
