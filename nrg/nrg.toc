@@ -2,9 +2,9 @@
 ## Notes: Addon to check mp5 rule (yeah, I know .. irrelevant for retail, but anyway)
 ## Version: 1.2.2
 ## Author: Mimma @ <EU-Pyrewood Village>
-## Interface: 90205
+## Interface: 30400
 ## SavedVariables: NRG_Options
-## X-Expansion-Level: 9
+## X-Expansion-Level: 3
 ## X-Curse-Project-ID: 637056
 ## X-WoWI-ID: 26352
 ## X-Wago-ID: rkGrarKy

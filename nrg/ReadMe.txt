@@ -10,6 +10,7 @@ Version history:
 ----------------
 NRG version 1.2.2
 * Fixed LUA error, caused by a reference to the NRG configuration, which does not exist.
+* Added (untestet) support for WotLK
 
 
 NRG version 1.2.1
