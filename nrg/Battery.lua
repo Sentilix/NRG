@@ -274,8 +274,8 @@ function A:InitializeConfigSettings()
 	end
 
 	local x,y = NRGPowerButton:GetPoint();
-	self:SetOption(CONFIG_KEY_PowerButtonPosX, Buffalo_GetOption(CONFIG_KEY_PowerButtonPosX, x))
-	self:SetOption(CONFIG_KEY_PowerButtonPosY, Buffalo_GetOption(CONFIG_KEY_PowerButtonPosY, y))
+	self:SetOption(CONFIG_KEY_PowerButtonPosX, self:GetOption(CONFIG_KEY_PowerButtonPosX, x))
+	self:SetOption(CONFIG_KEY_PowerButtonPosY, self:GetOption(CONFIG_KEY_PowerButtonPosY, y))
 
 	local value = self:GetOption(CONFIG_KEY_PowerButtonVisible, CONFIG_DEFAULT_PowerButtonVisible);
 	if type(value) == "boolean" then

@@ -1,6 +1,6 @@
 ## Title: NRG - mp5 Power Button
 ## Notes: Addon to check mp5 rule (yeah, I know .. irrelevant for retail, but anyway)
-## Version: 1.2.2
+## Version: 1.2.3
 ## Author: Mimma @ <EU-Pyrewood Village>
 ## Interface: 30400
 ## SavedVariables: NRG_Options

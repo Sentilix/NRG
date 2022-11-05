@@ -23,7 +23,7 @@
     <Content Include="Bmp\power4.png" />
     <Content Include="Bmp\power5.bmp" />
     <Content Include="Bmp\power5.png" />
-    <Content Include="nrg-TBC.toc">
+    <Content Include="nrg-Wrath.toc">
       <SubType>TableOfContents</SubType>
     </Content>
     <Content Include="nrg-Classic.toc">

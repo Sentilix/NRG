@@ -8,6 +8,11 @@ No config, no switches, no nothing. Well almost: you can move the power button b
 
 Version history:
 ----------------
+NRG version 1.2.3
+* Fixed LUA error while initializing addon.
+* Removed retail support after Shadowlands went live.
+
+
 NRG version 1.2.2
 * Fixed LUA error, caused by a reference to the NRG configuration, which does not exist.
 * Added (untestet) support for WotLK
