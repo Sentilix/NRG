@@ -8,9 +8,15 @@ No config, no switches, no nothing. Well almost: you can move the power button b
 
 Version history:
 ----------------
+NRG version 1.2.5
+* Bumped Wrath client version to 3.4.3
+* Bumped Classic client version to 1.15.0
+
+
 NRG version 1.2.4
 * Bumped Wrath client version to 3.4.2
 * Bumped Classic client version to 1.14.4
+
 
 NRG version 1.2.3
 * Fixed LUA error while initializing addon.
