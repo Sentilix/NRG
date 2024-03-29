@@ -8,8 +8,13 @@ No config, no switches, no nothing. Well almost: you can move the power button b
 
 Version history:
 ----------------
+NRG version 1.2.7
+* Bumped Classic client version to 1.15.2
+
+
 NRG version 1.2.6
 * Bumped Classic client version to 1.15.1
+
 
 NRG version 1.2.5
 * Bumped Wrath client version to 3.4.3
