@@ -23,9 +23,6 @@
     <Content Include="Bmp\power4.png" />
     <Content Include="Bmp\power5.bmp" />
     <Content Include="Bmp\power5.png" />
-    <Content Include="nrg-Wrath.toc">
-      <SubType>TableOfContents</SubType>
-    </Content>
     <Content Include="nrg-Classic.toc">
       <SubType>TableOfContents</SubType>
     </Content>
@@ -38,6 +35,9 @@
     <Content Include="Icons\power3.tga" />
     <Content Include="Icons\power4.tga" />
     <Content Include="Icons\power5.tga" />
+    <Content Include="nrg-Wrath.toc">
+      <SubType>TableOfContents</SubType>
+    </Content>
     <Content Include="nrg.toc">
       <SubType>TableOfContents</SubType>
     </Content>
