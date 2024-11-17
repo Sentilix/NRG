@@ -1,8 +1,8 @@
 ## Title: NRG - mp5 Power Button
 ## Notes: Addon to check mp5 rule
-## Version: 1.2.9
+## Version: 1.2.10
 ## Author: Mimma @ <EU-Pyrewood Village>
-## Interface: 11504
+## Interface: 11505
 ## SavedVariables: NRG_Options
 ## X-Expansion-Level: 1
 ## X-Curse-Project-ID: 637056
