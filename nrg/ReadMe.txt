@@ -8,6 +8,10 @@ No config, no switches, no nothing. Well almost: you can move the power button b
 
 Version history:
 ----------------
+NRG version 1.2.12
+* Bumped Classic client version to 1.15.7
+
+
 NRG version 1.2.11
 * Bumped Classic client version to 1.15.6
 
